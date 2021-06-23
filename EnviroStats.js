@@ -6,7 +6,7 @@ var deskProFound = false;
 var listenerIsSet = false;
 var roomAnalyticsListener;
 
-const TempUnit = "Celsius"; //Fahrenheit or Celsius
+const TempUnit = "Celsius"; //Fahrenheit or Celsius or Both
 
 function guiEvent(event) {
   if (event.WidgetId === 'btn_stop_data' && event.Type === 'clicked') {
@@ -31,6 +31,21 @@ function getCurrentDate() {
   return today + " " + hour + ":" + minute + ":" + seconds;
 }
 
+function setTempWidget(tempUnit, temp) {
+  if(tempUnit === "Fahrenheit"){
+    var newTemp = temp * 9 / 5 + 32;
+    newTemp = Number.parseFloat(newTemp).toFixed(1);
+    setWidgetValue("temp_value", newTemp + ' ' + tempUnit);
+  }
+  else if(tempUnit === "Both"){
+    var newTemp = temp * 9 / 5 + 32;
+    setWidgetValue("temp_value", temp + '°C / ' + newTemp + '°F');
+  }
+  else{
+    setWidgetValue("temp_value", temp + ' ' + tempUnit);
+  }
+}
+
 
 xapi.Event.UserInterface.Extensions.on(event => {
   try {
@@ -52,10 +67,7 @@ async function updateUI_Events(value) {
     try {
       const devices = await xapi.Status.Peripherals.ConnectedDevice.get();
       let temp = devices.find((d) => d.id === touchPanelIDNumber).RoomAnalytics.AmbientTemperature;
-      if(!(TempUnit === "Celsius")){
-        temp = temp * 9 / 5 + 32;
-      }
-      setWidgetValue("temp_value", temp + ' ' + TempUnit);
+      setTempWidget(TempUnit, temp);
     } catch (error) {
 
     }
@@ -76,12 +88,7 @@ async function updateUI_Events(value) {
   } else {
     try {
       let temp = await xapi.Status.RoomAnalytics.AmbientTemperature.get();
-      if(!(TempUnit === "Celsius")){
-        temp = temp * 9 / 5 + 32;
-        setWidgetValue("temp_value", temp + ' ' + TempUnit);
-      }else{
-        setWidgetValue("temp_value", temp + ' ' + TempUnit);
-      }
+      setTempWidget(TempUnit, temp);
     } catch (error) {
 
     }
@@ -140,10 +147,7 @@ async function updateUI() {
     try {
       const devices = await xapi.Status.Peripherals.ConnectedDevice.get();
       let temp = devices.find((d) => d.id === touchPanelIDNumber).RoomAnalytics.AmbientTemperature;
-      if(!(TempUnit === "Celsius")){
-        temp = temp * 9 / 5 + 32;
-      }
-      setWidgetValue("temp_value", temp + ' ' + TempUnit);
+      setTempWidget(TempUnit, temp);
     } catch (error) {
 
     }
@@ -157,10 +161,7 @@ async function updateUI() {
   } else {
     try {
       let temp = await xapi.Status.RoomAnalytics.AmbientTemperature.get();
-      if(!(TempUnit === "Celsius")){
-        temp = temp * 9 / 5 + 32;
-      }
-      setWidgetValue("temp_value", temp + ' ' + TempUnit);
+      setTempWidget(TempUnit, temp);
     } catch (error) {
 
     }
