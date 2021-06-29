@@ -2,7 +2,6 @@ import xapi from 'xapi';
 
 var touchPanelIDNumber = 0;
 var touchPanelFound = false;
-var deskProFound = false;
 var listenerIsSet = false;
 var roomAnalyticsListener;
 
@@ -252,7 +251,6 @@ async function checkIfDeskProOrNavigator() {
   try {
     const device = await xapi.Status.Peripherals.ConnectedDevice.get();
     if (device === "Cisco Webex Desk Pro") {
-      deskProFound = true;
       console.log("Desk Pro Found");
     } else {
       await setTouchPanelID();
