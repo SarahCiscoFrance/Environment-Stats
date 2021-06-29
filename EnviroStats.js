@@ -157,6 +157,13 @@ async function updateUI() {
     } catch (error) {
 
     }
+    try {
+      const devices = await xapi.Status.Peripherals.ConnectedDevice.get();
+      const aq = devices.find((d) => d.id === touchPanelIDNumber).RoomAnalytics.AirQuality.Index;
+      setWidgetValue("aq_value", aq);
+    } catch (error) {
+
+    }
   } else {
     try {
       let temp = await xapi.Status.RoomAnalytics.AmbientTemperature.get();
