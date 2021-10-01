@@ -38,6 +38,7 @@ function setTempWidget(tempUnit, temp) {
   }
   else if(tempUnit === "Both"){
     var newTemp = temp * 9 / 5 + 32;
+    newTemp = Number.parseFloat(newTemp).toFixed(1);
     setWidgetValue("temp_value", temp + '°C / ' + newTemp + '°F');
   }
   else{
